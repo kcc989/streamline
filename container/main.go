@@ -60,6 +60,8 @@ type Server struct {
 	maxSessionDuration time.Duration
 	sessionTimer       *time.Timer
 	sessionTimerID     int
+	recording          *recordingSession // protected by sessionMu
+	recordingRequestMu sync.Mutex        // admits one bounded recording body at a time
 }
 
 // NewServer constructs a Server with all routes registered.
@@ -148,6 +150,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.handleHTTPOutput(w, r)
 	case "/test-stream":
 		s.handleHTTPTestStream(w, r)
+	case "/recordings", "/recordings/frame", "/recordings/annotation", "/recordings/narration", "/recordings/finalize", "/recordings/output", "/recordings/cancel":
+		s.handleRecording(w, r)
 	default:
 		http.NotFound(w, r)
 	}

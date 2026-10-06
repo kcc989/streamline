@@ -40,6 +40,8 @@ Container image publication and application deployment are managed separately.
 
 ## Documentation
 
+- [Offline recordings](docs/RECORDING_API.md): timestamped JPEGs, scheduled PNG annotations, timed masks, narration, and finalized MP4 output.
+
 - [Architecture](ARCHITECTURE.md): components, trust boundaries, limits, and media flow.
 - [Session API contract](docs/SESSION_API_CONTRACT.md): Worker integration and typed session protocol.
 - [`@cloudflare/streamline`](packages/cloudflare/README.md): package API and Durable Object base class.

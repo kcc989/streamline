@@ -11,6 +11,26 @@ import {
 const origin = 'https://media.example'
 const ownerHeaders = { 'X-Streamline-Principal': 'owner' }
 
+test('offline recording routes require an explicit application adapter', async () => {
+  let containerCalls = 0
+  const { session } = createSession(async () => {
+    containerCalls++
+    return new Response('container')
+  })
+  for (const path of ['/recordings', '/recordings/frame', '/recordings/output', '/recordings/cancel',
+    '/%72ecordings', '/recordings%2Foutput', '/recordings/%6Earration']) {
+    const response = await session.fetch(request(path))
+    assert.equal(response.status, 404)
+  }
+  assert.equal(containerCalls, 0)
+  const malformed = await session.fetch(request('/recordings%ZZ'))
+  assert.equal(malformed.status, 400)
+  session.interceptAllApplicationRoutes = true
+  const configured = await session.fetch(request('/recordings'))
+  assert.equal(await configured.text(), 'application')
+  assert.equal(containerCalls, 0)
+})
+
 class TestSession extends StreamlineSessionDO {
   applicationRequests = []
   interceptAllApplicationRoutes = false

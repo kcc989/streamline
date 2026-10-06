@@ -71,8 +71,7 @@ func validateAnnotationPNG(frame []byte) (int, int, error) {
 		}
 	}
 	defer func() { <-annotationDecode }()
-	reader := bytes.NewReader(frame)
-	if _, err := png.Decode(reader); err != nil || reader.Len() != 0 {
+	if _, err := media.DecodeAnnotationPNG(frame, width, height); err != nil {
 		return 0, 0, &annotationError{
 			code:    "INVALID_ANNOTATION",
 			message: "Annotation image is not a valid PNG",

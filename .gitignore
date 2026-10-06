@@ -27,3 +27,4 @@ Thumbs.db
 
 # Local Go binaries
 container/container
+local-artifacts/
