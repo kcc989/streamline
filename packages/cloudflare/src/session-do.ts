@@ -454,6 +454,17 @@ export abstract class StreamlineSessionDO<Env extends StreamlineSessionEnvironme
 
     const applicationResponse = await this.handleApplicationRequest(request)
     if (applicationResponse) return applicationResponse
+    // Offline recordings need an authenticated application adapter. The
+    // generic fallback must never bypass principal ownership for these routes.
+    let containerPath: string
+    try {
+      containerPath = decodeURIComponent(url.pathname)
+    } catch {
+      return new Response('Invalid request path', { status: 400 })
+    }
+    if (containerPath === '/recordings' || containerPath.startsWith('/recordings/')) {
+      return new Response('Recording adapter is not configured', { status: 404 })
+    }
     return super.fetch(request)
   }
 

@@ -77,6 +77,10 @@ func (s *Server) handleHTTPStart(w http.ResponseWriter, r *http.Request) {
 
 	s.sessionMu.Lock()
 	defer s.sessionMu.Unlock()
+	if s.recording != nil {
+		http.Error(w, "Recording slot is reserved", http.StatusConflict)
+		return
+	}
 
 	subtitleTimeout := s.subtitleTimeout
 	if subtitleTimeout <= 0 {

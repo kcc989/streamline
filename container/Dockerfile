@@ -13,6 +13,7 @@ COPY ffmpeg/ ./ffmpeg/
 COPY media/ ./media/
 COPY protocol/ ./protocol/
 COPY subtitle/ ./subtitle/
+COPY recording/ ./recording/
 
 RUN go build -mod=vendor -trimpath -o /streamline .
 
